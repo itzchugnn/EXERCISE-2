@@ -1,16 +1,16 @@
-# 🚀 Dự Án Hệ Thống Thông Tin - Web Backend & Database
+# Dự Án Hệ Thống Thông Tin - Web Backend & Database
 
 Dự án phát triển ứng dụng Web tập trung vào thiết kế cơ sở dữ liệu quan hệ và kiến trúc Backend phân tầng (Layered Architecture: Controller - Service - Model) dành cho môn học chuyên ngành Hệ thống Thông tin (HTTT).
 
 ---
 
-## 👥 Thành viên & Đóng góp
+## Thành viên & Đóng góp
 - **Chủ dự án (Author)**: Trần Nguyễn Công Chung
 - **Cộng tác viên (Collaborators)**: Nhóm sinh viên HTTT
 
 ---
 
-## 📂 Cấu trúc thư mục dự án
+## Cấu trúc thư mục dự án
 
 ```text
 EXERCISE-2-main/
@@ -26,7 +26,7 @@ EXERCISE-2-main/
 │   │   └── 01_initial_schema.sql# DDL: Khởi tạo bảng, khóa chính/ngoại, index
 │   └── seeds/
 │       └── 01_sample_data.sql   # DML: Dữ liệu mẫu ban đầu để test
-├── local/                       # ⚠️ THƯ MỤC CÁ NHÂN (Được Git ignore hoàn toàn)
+├── local/                       # THƯ MỤC CÁ NHÂN (Được Git ignore hoàn toàn)
 │   └── README_LOCAL.md          # Lưu query nháp, test riêng, không bao giờ bị push
 ├── src/                         # Mã nguồn Backend (Layered Architecture)
 │   ├── config/                  # Cấu hình Database Pool & biến môi trường
@@ -50,14 +50,14 @@ EXERCISE-2-main/
 
 ---
 
-## 🔒 Thư mục `local/` (Dành riêng cho cá nhân)
+## Thư mục `local/` (Dành riêng cho cá nhân)
 Thư mục `local/` đã được thêm vào file [`.gitignore`](file:///e:/EXERCISE-2-main/.gitignore).
 - Mọi file, thư mục con, script test nhanh, file backup CSDL bạn tạo bên trong `local/` đều **sẽ không bao giờ được Git quét qua**.
 - Bạn có thể thoải mái thực hiện `git add .`, `git commit` và `git push` mà không lo bị lộ file nháp hoặc dữ liệu test cá nhân lên GitHub.
 
 ---
 
-## 🛠️ Hướng dẫn cài đặt và chạy cho thành viên nhóm
+## Hướng dẫn cài đặt và chạy cho thành viên nhóm
 
 ### 1. Sao chép và cấu hình biến môi trường
 Mỗi thành viên tự tạo 1 file `.env` ở thư mục gốc (không commit file này lên git):
@@ -92,7 +92,7 @@ Kiểm tra API hoạt động tại:
 
 ---
 
-## 🌿 Quy trình làm việc nhóm trên GitHub (Git Flow)
+## Quy trình làm việc nhóm trên GitHub (Git Flow)
 
 1. **Tuyệt đối không push trực tiếp lên nhánh `main`**.
 2. **Quy tắc tạo nhánh (Branching)**:

@@ -1,4 +1,4 @@
-# 📚 TỪ ĐIỂN DỮ LIỆU (DATA DICTIONARY)
+# TỪ ĐIỂN DỮ LIỆU (DATA DICTIONARY)
 
 Tài liệu này quy chuẩn cấu trúc cơ sở dữ liệu của dự án để tất cả các thành viên trong nhóm thống nhất khi viết code Backend và truy vấn SQL.
 

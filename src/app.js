@@ -31,8 +31,8 @@ app.use(errorHandler);
 // Khởi chạy server nếu chạy trực tiếp
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`🚀 Server đang chạy tại: http://localhost:${PORT}`);
-    console.log(`📡 Health check endpoint: http://localhost:${PORT}/api/health`);
+    console.log(`Server đang chạy tại: http://localhost:${PORT}`);
+    console.log(`Health check endpoint: http://localhost:${PORT}/api/health`);
   });
 }
 

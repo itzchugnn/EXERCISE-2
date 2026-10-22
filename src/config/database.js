@@ -14,11 +14,11 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-  console.log('✅ Đã kết nối thành công đến Database Pool');
+  console.log('Đã kết nối thành công đến Database Pool');
 });
 
 pool.on('error', (err) => {
-  console.error('❌ Lỗi bất ngờ trên Database Pool:', err);
+  console.error('Lỗi bất ngờ trên Database Pool:', err);
 });
 
 module.exports = {
