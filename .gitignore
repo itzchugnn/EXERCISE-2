@@ -1,0 +1,75 @@
+# ==========================================
+# 1. THƯ MỤC CÁ NHÂN / LOCAL (YÊU CẦU ĐẶC BIỆT)
+# ==========================================
+# Thư mục này dùng để chứa code nháp, script test cá nhân, ghi chú,
+# file dump database tạm... Dù gõ `git add .`, Git cũng bỏ qua hoàn toàn.
+local/
+*.local
+
+# ==========================================
+# 2. FILE BIẾN MÔI TRƯỜNG & BẢO MẬT (CREDENTIALS)
+# ==========================================
+# Tuyệt đối không commit mật khẩu, chuỗi kết nối DB, API keys lên GitHub!
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# 3. DEPENDENCIES / THƯ VIỆN CÀI ĐẶT
+# ==========================================
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Java / Maven / Gradle
+target/
+*.class
+.gradle/
+build/
+
+# ==========================================
+# 4. CƠ SỞ DỮ LIỆU & FILE TẠM THỜI (DATABASE & LOGS)
+# ==========================================
+*.log
+logs/
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.sql.bak
+temp/
+tmp/
+
+# ==========================================
+# 5. CẤU HÌNH IDE & TRÌNH SOẠN THẢO (EDITOR)
+# ==========================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ==========================================
+# 6. HỆ ĐIỀU HÀNH (OS GENERATED FILES)
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
