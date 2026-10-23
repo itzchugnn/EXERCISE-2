@@ -178,9 +178,9 @@ Hệ thống bao gồm **14 thực thể** (bao gồm cả thực thể thông t
   - `MaHD` (FK, VARCHAR(15), NOT NULL): Hóa đơn kích hoạt gói này (tham chiếu `HoaDon(MaHD)`).
   - `NgayBatDau` (DATE, NOT NULL): Ngày gói bắt đầu có hiệu lực.
   - `NgayKetThuc` (DATE, NOT NULL): Ngày hết hạn gói.
-  - `TongSoBuoiPT` (INT, DEFAULT 0): Tổng số buổi PT được hưởng theo gói.
-  - `SoBuoiPTDaTap` (INT, DEFAULT 0): Số buổi PT đã hoàn thành.
-  - `SoBuoiPTConLai` (INT, GENERATED ALWAYS AS (TongSoBuoiPT - SoBuoiPTDaTap)): Số buổi PT còn lại khả dụng.
+  - `TongSoBuoi` (INT, DEFAULT 0): Tổng số buổi PT được hưởng theo gói.
+  - `DaTap` (INT, DEFAULT 0): Số buổi PT đã hoàn thành.
+  - `ConLai` (INT, GENERATED ALWAYS AS (TongSoBuoi - DaTap)): Số buổi PT còn lại khả dụng.
   - `TrangThai` (VARCHAR(20), DEFAULT 'DANG_HOAT_DONG'): Trạng thái (`DANG_HOAT_DONG`, `HET_HAN`, `BAO_LUU`, `DA_HUY`).
 
 ### 3.13. Thực thể `CheckIn` (Check-in Access Log)
@@ -202,11 +202,11 @@ Hệ thống bao gồm **14 thực thể** (bao gồm cả thực thể thông t
   - `MaDKGoi` (FK, VARCHAR(15), NOT NULL): Mã gói PT mà hội viên sử dụng để trừ buổi (tham chiếu `DKGoi(MaDKGoi)` theo BR19).
   - `MaNV` (FK, VARCHAR(10), NOT NULL): Huấn luyện viên (PT) phụ trách hướng dẫn (tham chiếu `NhanVien(MaNV)` theo BR20).
   - `MaCN` (FK, VARCHAR(10), NOT NULL): Chi nhánh diễn ra buổi tập (tham chiếu `ChiNhanh(MaCN)` theo BR21).
-  - `ThoiGianBatDau` (TIMESTAMP, NOT NULL): Thời gian bắt đầu buổi tập (ví dụ: `2026-10-23 18:00:00`).
-  - `ThoiGianKetThuc` (TIMESTAMP, NOT NULL): Thời gian kết thúc buổi tập (ví dụ: `2026-10-23 19:00:00`).
+  - `TGBatDau` (TIMESTAMP, NOT NULL): Thời gian bắt đầu buổi tập (ví dụ: `2026-10-23 18:00:00`).
+  - `TGKetThuc` (TIMESTAMP, NOT NULL): Thời gian kết thúc buổi tập (ví dụ: `2026-10-23 19:00:00`).
   - `TrangThai` (VARCHAR(20), DEFAULT 'DA_DAT'): Trạng thái lịch (`DA_DAT`, `HOAN_THANH`, `DA_HUY`, `VANG_MAT`).
   - `DanhGiaSao` (INT, CHECK (DanhGiaSao BETWEEN 1 AND 5)): Đánh giá chất lượng của hội viên cho PT.
-  - `NhanXetHoiVien` (TEXT): Ý kiến phản hồi của hội viên sau buổi tập.
+  - `NhanXet` (TEXT): Ý kiến phản hồi của hội viên sau buổi tập.
 
 ---
 
@@ -263,177 +263,7 @@ Ma trận dưới đây thể hiện mối tương quan trực tiếp giữa cá
 
 ---
 
-## 6. SƠ ĐỒ THỰC THỂ - MỐI KẾT HỢP (ERD DIAGRAM)
-
-Dưới đây là sơ đồ Mermaid ERD chuẩn hóa thể hiện toàn diện 14 thực thể và 21 quy tắc quan hệ:
-
-```mermaid
-erDiagram
-    CHINHANH ||--|{ NHANVIEN : "BR01_co_nhan_vien"
-    CHINHANH ||--o| NHANVIEN : "BR02_duoc_quan_ly_boi"
-    CHINHANH ||--o{ LICHSUCONGTAC : "BR03_ghi_nhan_dieu_chuyen"
-    NHANVIEN ||--|{ LICHSUCONGTAC : "BR04_co_lich_su"
-    
-    CHINHANH ||--|{ CHINHANH_GOIDICHVU : "BR05_cung_cap"
-    GOIDICHVU ||--o{ CHINHANH_GOIDICHVU : "BR05_co_tai"
-    
-    CHINHANH ||--o{ TONKHO : "BR06_quan_ly_ton_kho"
-    SANPHAM ||--o{ TONKHO : "BR07_ton_tai_trong_kho"
-    
-    HANGHV ||--o{ HOIVIEN : "BR08_phan_loai_hang"
-    
-    HOIVIEN ||--o{ HOADON : "BR09_thanh_toan"
-    NHANVIEN ||--o{ HOADON : "BR10_lap_hoa_don"
-    CHINHANH ||--o{ HOADON : "BR11_phat_sinh_tai"
-    
-    HOADON ||--|{ CTHOADON : "BR12_co_chi_tiet"
-    GOIDICHVU ||--o{ CTHOADON : "BR13_goi_duoc_ban"
-    SANPHAM ||--o{ CTHOADON : "BR13_sp_duoc_ban"
-    
-    HOIVIEN ||--o{ DKGOI : "BR14_so_huu_goi"
-    GOIDICHVU ||--o{ DKGOI : "BR15_duoc_dang_ky"
-    HOADON ||--o{ DKGOI : "BR16_kich_hoat_tu"
-    
-    HOIVIEN ||--o{ CHECKIN : "BR17_thuc_hien_checkin"
-    CHINHANH ||--o{ CHECKIN : "BR18_tiep_nhan_checkin"
-    
-    DKGOI ||--o{ LICHHENPT : "BR19_su_dung_buoi_tap"
-    NHANVIEN ||--o{ LICHHENPT : "BR20_pt_huong_dan"
-    CHINHANH ||--o{ LICHHENPT : "BR21_to_chuc_tai_cn"
-
-    CHINHANH {
-        string MaCN PK
-        string TenCN
-        string DiaChi
-        string SoDienThoai
-        time GioMoCua
-        time GioDongCua
-        string NhanVienQL FK
-    }
-
-    NHANVIEN {
-        string MaNV PK
-        string TenNV
-        string SoDienThoai
-        string Email
-        string ChucVu
-        string ChiNhanhCT FK
-        decimal LuongCoBan
-    }
-
-    LICHSUCONGTAC {
-        int MaLSCT PK
-        string MaNV FK
-        string MaCN FK
-        date NgayBatDau
-        date NgayKetThuc
-        string ChucVu
-    }
-
-    HANGHV {
-        string MaHang PK
-        string TenHang
-        decimal ChiTieuToiThieu
-        decimal TiLeGiamGia
-    }
-
-    HOIVIEN {
-        string MaHV PK
-        string TenHV
-        string SoDienThoai
-        string Email
-        string CCCD
-        string MaHang FK
-        int DiemTichLuy
-        decimal TongChiTieuNam
-    }
-
-    GOIDICHVU {
-        string MaGoi PK
-        string TenGoi
-        string LoaiGoi
-        int ThoiHanThang
-        int SoBuoiPT
-        decimal GiaTien
-    }
-
-    CHINHANH_GOIDICHVU {
-        string MaCN PK, FK
-        string MaGoi PK, FK
-        string TrangThai
-    }
-
-    SANPHAM {
-        string MaSP PK
-        string TenSP
-        string LoaiSP
-        decimal GiaBan
-        string DonViTinh
-    }
-
-    TONKHO {
-        int MaTK PK
-        string MaCN FK
-        string MaSP FK
-        int SoLuongTon
-        int MucTonToiThieu
-    }
-
-    HOADON {
-        string MaHD PK
-        timestamp NgayLap
-        string MaHV FK
-        string MaNV FK
-        string MaCN FK
-        decimal TongTienThanhToan
-        string HinhThucThanhToan
-    }
-
-    CTHOADON {
-        int MaCTHD PK
-        string MaHD FK
-        string MaGoi FK
-        string MaSP FK
-        int SoLuong
-        decimal DonGia
-        decimal ThanhTien
-    }
-
-    DKGOI {
-        string MaDKGoi PK
-        string MaHV FK
-        string MaGoi FK
-        string MaHD FK
-        date NgayBatDau
-        date NgayKetThuc
-        int TongSoBuoiPT
-        int SoBuoiPTDaTap
-    }
-
-    CHECKIN {
-        bigint MaCheckIn PK
-        string MaHV FK
-        string MaCN FK
-        timestamp ThoiGianVao
-        timestamp ThoiGianRa
-        string CuaKiemSoat
-        string KetQuaXacThuc
-    }
-
-    LICHHENPT {
-        string MaLH PK
-        string MaDKGoi FK
-        string MaNV FK
-        string MaCN FK
-        timestamp ThoiGianBatDau
-        timestamp ThoiGianKetThuc
-        string TrangThai
-    }
-```
-
----
-
-## 7. ĐỊNH HƯỚNG GIẢI QUYẾT 5 VẤN ĐỀ THỰC TẾ DỰA TRÊN THIẾT KẾ ER
+## 6. ĐỊNH HƯỚNG GIẢI QUYẾT 5 VẤN ĐỀ THỰC TẾ DỰA TRÊN THIẾT KẾ ER
 
 Mô hình thực thể trên được thiết kế tối ưu có chủ đích nhằm giải quyết triệt để 5 bài toán thực tế nêu tại mục **Vấn đề hệ thống thực tế** trong [`MoTa.md`](file:///e:/EXERCISE-2-main/docs/MoTa.md):
 
@@ -444,9 +274,9 @@ Mô hình thực thể trên được thiết kế tối ưu có chủ đích nh
   - Sử dụng khóa chính kiểu `BIGINT` cho `CheckIn` để ghi log tốc độ cao, hỗ trợ phân vùng (Partitioning) theo ngày/tháng để việc INSERT không bị lock bảng chính.
 
 ### 2. Xung đột đặt lịch HLV cá nhân (Ngăn chặn Overbooking tuyệt đối)
-- **Thiết kế**: Thực thể `LichHenPT` lưu rõ `MaNV`, `ThoiGianBatDau`, `ThoiGianKetThuc` và `TrangThai`.
+- **Thiết kế**: Thực thể `LichHenPT` lưu rõ `MaNV`, `TGBatDau`, `TGKetThuc` và `TrangThai`.
 - **Giải pháp**:
-  - Áp dụng ràng buộc loại trừ thời gian (PostgreSQL Exclusion Constraint: `EXCLUDE USING gist (MaNV WITH =, tsrange(ThoiGianBatDau, ThoiGianKetThuc) WITH &&) WHERE (TrangThai = 'DA_DAT')`).
+  - Áp dụng ràng buộc loại trừ thời gian (PostgreSQL Exclusion Constraint: `EXCLUDE USING gist (MaNV WITH =, tsrange(TGBatDau, TGKetThuc) WITH &&) WHERE (TrangThai = 'DA_DAT')`).
   - Đảm bảo cơ chế kiểm tra đồng thời ở mức Database Engine, loại bỏ hoàn toàn khả năng trùng lịch giữa hai giao dịch đồng thời.
 
 ### 3. Bùng nổ dữ liệu Log & Báo cáo doanh thu chậm
@@ -462,19 +292,19 @@ Mô hình thực thể trên được thiết kế tối ưu có chủ đích nh
   - Sử dụng cơ chế cộng dồn gia tăng (Incremental Update) qua Trigger sau khi thanh toán hóa đơn thành công, kết hợp với Job định kỳ chạy ban đêm để rà soát hạ hạng nếu quá 12 tháng. Thao tác thanh toán và in hóa đơn phản hồi tức thì.
 
 ### 5. Tra cứu Lịch sử điều chuyển Nhân sự & Lương/Hoa hồng sai lệch
-- **Thiết kế**: Thực thể `LichSuCongTac` lưu giữ khoảng thời gian `[NgayBatDau, NgayKetThuc]` tại từng chi nhánh của từng nhân viên. Thực thể `LichHenPT` lưu vết cả `MaNV`, `MaCN` và `ThoiGianBatDau`.
+- **Thiết kế**: Thực thể `LichSuCongTac` lưu giữ khoảng thời gian `[NgayBatDau, NgayKetThuc]` tại từng chi nhánh của từng nhân viên. Thực thể `LichHenPT` lưu vết cả `MaNV`, `MaCN` và `TGBatDau`.
 - **Giải pháp**:
   - Khi tính hoa hồng PT theo chi nhánh, liên kết `LichHenPT` với `LichSuCongTac` bằng điều kiện:
     ```sql
     ON LichHenPT.MaNV = LichSuCongTac.MaNV
-    AND LichHenPT.ThoiGianBatDau >= LichSuCongTac.NgayBatDau
-    AND (LichSuCongTac.NgayKetThuc IS NULL OR LichHenPT.ThoiGianBatDau <= LichSuCongTac.NgayKetThuc)
+    AND LichHenPT.TGBatDau >= LichSuCongTac.NgayBatDau
+    AND (LichSuCongTac.NgayKetThuc IS NULL OR LichHenPT.TGBatDau <= LichSuCongTac.NgayKetThuc)
     ```
   - Đảm bảo xác định chính xác 100% thời điểm diễn ra buổi tập đó, PT đang thuộc biên chế chi nhánh nào, không bao giờ bị sai lệch hoa hồng khi chuyển chi nhánh.
 
 ---
 
-## 8. KẾT LUẬN
+## 7. KẾT LUẬN
 
 Tài liệu này đã bao phủ toàn diện:
 1. **14 thực thể** phản ánh đầy đủ nghiệp vụ chuỗi phòng tập FitLife Hub.
